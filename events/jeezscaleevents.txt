@@ -1,0 +1,78 @@
+namespace = jeezyearlystations
+
+# 1.25% hp per year
+event = {
+	id = jeezyearlystations.100
+	hide_window = yes
+	is_triggered_only = yes
+
+	immediate = {
+		every_country = {
+			every_owned_fleet = {
+				limit = {
+					NOT = { has_fleet_flag = jeezstationscaledignore }
+					OR = {
+						is_ship_class = shipclass_military_station
+						is_ship_class = shipclass_orbital_station
+						is_ship_class = shipclass_mining_station
+						is_ship_class = shipclass_research_station
+						is_ship_class = shipclass_wormhole_station
+						is_ship_class = shipclass_observation_station
+						is_ship_class = shipclass_outpost_station
+					}
+				}
+				if = {
+					limit = { check_variable = { which = jeezscaledbuff value > 0 } }
+					if = { limit = { check_variable = { which = jeezscaledbuff value < 241 } }
+						add_modifier = {
+							modifier = jeez_stations_scalebuff
+							days = -1
+						}
+						change_variable = { which = jeezscaledbuff value = 1 }
+						else = { set_fleet_flag = jeezstationscaledignore }
+					}
+					else = {
+						# This fleet/station is new
+						switch = {
+							trigger = years_passed
+							100 > { set_variable = { which = jeezscaledbuff value = 100 } }
+							90  > { set_variable = { which = jeezscaledbuff value = 90 } }
+							80  > { set_variable = { which = jeezscaledbuff value = 80 } }
+							70  > { set_variable = { which = jeezscaledbuff value = 70 } }
+							60  > { set_variable = { which = jeezscaledbuff value = 60 } }
+							50  > { set_variable = { which = jeezscaledbuff value = 50 } }
+							40  > { set_variable = { which = jeezscaledbuff value = 40 } }
+							30  > { set_variable = { which = jeezscaledbuff value = 30 } }
+							20  > { set_variable = { which = jeezscaledbuff value = 20 } }
+							10  > { set_variable = { which = jeezscaledbuff value = 10 } }
+							default = {
+								set_variable = { which = jeezscaledbuff value = 1 }
+							}
+						}
+						if = {
+							limit = { check_variable = { which = jeezscaledbuff value = 1 } }
+								add_modifier = {
+									modifier = jeez_stations_scalebuff
+									days = -1
+								}
+							else = {
+								set_variable = { which = tmp value = jeezscaledbuff }
+								# While loops in this engine cant loop more than 100 times
+								# We could have used a flag to swap between the 1.25% HP buff and a larger buff,
+								# but it's not that important.
+								while = {
+									limit = { check_variable = { which = tmp value > 0 } }
+									add_modifier = {
+										modifier = jeez_stations_scalebuff
+										days = -1
+									}
+									subtract_variable = { which = tmp value = 1 }
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
