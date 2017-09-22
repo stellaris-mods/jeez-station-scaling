@@ -4,6 +4,6 @@ return {
 	name = "Yet Another Station Buff, Jeez",
 	tags = { "Military" },
 	picture = "thumb.png",
-	supported_version = "1.6.*",
+	supported_version = "1.8.*",
 	remote_file_id = 839507693,
 }
